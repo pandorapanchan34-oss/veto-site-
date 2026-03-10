@@ -249,16 +249,18 @@ const data = await res.json()
 
 console.log("AI response:", data)
 
-const text =
-data.candidates?.[0]?.content?.parts?.[0]?.text ||
-"AI応答なし"
+let text = "AI応答なし"
+
+if(data.candidates && data.candidates.length > 0){
+const parts = data.candidates[0].content.parts
+text = parts.map(p => p.text).join("")
+}
 
 addAI(text)
 
 }catch(e){
 
 console.error(e)
-
 addAI("AIエラー")
 
 }
