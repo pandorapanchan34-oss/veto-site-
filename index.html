@@ -2,31 +2,50 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>VETO TEST</title>
+<title>VETO AI</title>
 
 <style>
 body{
-background:#111;
-color:white;
-font-family:sans-serif;
-padding:40px;
+font-family: sans-serif;
+background:#f5f5f5;
+margin:0;
+padding:0;
 }
 
 #chat{
-border:1px solid #333;
-height:300px;
-overflow:auto;
-padding:10px;
-margin-bottom:10px;
+height:70vh;
+overflow-y:auto;
+padding:20px;
+background:white;
 }
 
-input{
-width:80%;
+.message{
+margin:10px 0;
+}
+
+.user{
+color:#333;
+}
+
+.ai{
+color:#0066ff;
+}
+
+#inputArea{
+display:flex;
 padding:10px;
+background:#eee;
+}
+
+#userInput{
+flex:1;
+padding:10px;
+font-size:16px;
 }
 
 button{
-padding:10px;
+padding:10px 20px;
+font-size:16px;
 }
 </style>
 
@@ -34,51 +53,83 @@ padding:10px;
 
 <body>
 
-<h1>VETO AI TEST</h1>
+<h2 style="text-align:center">VETO AI 相談</h2>
 
 <div id="chat"></div>
 
-<input id="msg" placeholder="AI導入相談を書く">
-
-<button onclick="sendMsg()">送信</button>
+<div id="inputArea">
+<input id="userInput" placeholder="相談内容を入力">
+<button onclick="sendMessage()">送信</button>
+</div>
 
 <script>
 
-async function sendMsg(){
+let messageCount = 0;
+const FREE_LIMIT = 3;
 
-const input = document.getElementById("msg");
+function addMessage(text, className){
+
 const chat = document.getElementById("chat");
 
-const text = input.value;
+const div = document.createElement("div");
+div.className = "message " + className;
+div.textContent = text;
 
-chat.innerHTML += "<div>YOU: "+text+"</div>";
+chat.appendChild(div);
 
-const res = await fetch("/api/chat",{
+chat.scrollTop = chat.scrollHeight;
+
+}
+
+async function sendMessage(){
+
+const input = document.getElementById("userInput");
+const message = input.value.trim();
+
+if(!message) return;
+
+addMessage("あなた: " + message,"user");
+
+input.value="";
+
+messageCount++;
+
+if(messageCount > FREE_LIMIT){
+
+addMessage(
+"🤖 VETO AI診断はここまでです。\n\n詳しいAI改善プランを作成します。\n\nAIコンサル診断 ¥1000\n\nhttps://example.com",
+"ai"
+);
+
+return;
+
+}
+
+try{
+
+const res = await fetch("/api/consult",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-message:text
+message:message
 })
 });
 
 const data = await res.json();
 
-console.log(data);
+addMessage("VETO AI: " + data.reply,"ai");
 
-let reply = "AIエラー";
+}catch(e){
 
-if(data.reply){
-reply = data.reply;
+addMessage("AIエラー","ai");
+
 }
-
-chat.innerHTML += "<div>AI: "+reply+"</div>";
-
-input.value="";
 
 }
 
 </script>
+
 </body>
 </html>
