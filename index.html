@@ -476,7 +476,7 @@ async function incrementCount() {
 }
 
 window.addEventListener('load', function() {
-  setTimeout(fetchCount, 400);
+  refreshUI(42);
 });
 
 // ── パターンバー ──
@@ -564,7 +564,6 @@ async function sendMsg() {
   msgCnt++;
 
   // カウント+1（サーバー経由）
-  incrementCount();
   showTyping();
 
   try {
