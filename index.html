@@ -65,13 +65,20 @@ message:text
 
 const data = await res.json();
 
-chat.innerHTML += "<div>AI: "+data.reply+"</div>";
+console.log(data);
+
+let reply = "AIエラー";
+
+if(data.reply){
+reply = data.reply;
+}
+
+chat.innerHTML += "<div>AI: "+reply+"</div>";
 
 input.value="";
 
 }
 
 </script>
-
 </body>
 </html>
