@@ -569,7 +569,7 @@ async function sendMsg() {
 
   try {
     // ── Vercel関数経由でClaude呼び出し ──
-    var res = await fetch('/api/consult', {
+    var res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: history })
