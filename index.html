@@ -607,23 +607,18 @@ document.getElementById('chatInput').addEventListener('input', function() {
 </script>
 </body>
 </html>
+<script>
 async function logData(input, reply){
-
-  try{
-
-    await fetch("/api/log",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json"
-      },
-      body:JSON.stringify({
-        input:input,
-        reply:reply
-      })
-    });
-
-  }catch(e){
-    console.error("log error",e);
-  }
-
+ try{
+  await fetch("/api/log",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({ input:input, reply:reply })
+  });
+ }catch(e){
+  console.error("log error",e);
+ }
 }
+</script>
