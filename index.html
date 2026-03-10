@@ -247,9 +247,13 @@ message:message
 
 const data = await res.json()
 
-console.log("AI response:",data)
+console.log("AI response:", data)
 
-addAI(data.text || "AI応答なし")
+const text =
+data.candidates?.[0]?.content?.parts?.[0]?.text ||
+"AI応答なし"
+
+addAI(text)
 
 }catch(e){
 
