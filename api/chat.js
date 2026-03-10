@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { messages } = req.body;
+  const { message } = req.body;
 
   try {
 
@@ -17,8 +17,13 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "claude-3-haiku-20240307",
-        max_tokens: 500,
-        messages: messages
+        max_tokens: 300,
+        messages: [
+          {
+            role: "user",
+            content: message
+          }
+        ]
       })
     });
 
@@ -31,7 +36,7 @@ export default async function handler(req, res) {
   } catch (error) {
 
     res.status(500).json({
-      error: "AI request failed"
+      error: "AI error"
     });
 
   }
