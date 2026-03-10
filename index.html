@@ -2,269 +2,133 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>VETO — NOと言える、唯一の外部脳</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Noto+Sans+JP:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<title>VETO AI</title>
 
 <style>
-
-:root{
---bg:#090909;
---surface:#111;
---card:#161616;
---border:#222;
---accent:#d4870a;
---text:#ede8dc;
---muted:#666;
-}
-
 body{
+font-family: sans-serif;
+background:#f5f5f5;
 margin:0;
-background:var(--bg);
-color:var(--text);
-font-family:'Noto Sans JP',sans-serif;
+padding:0;
 }
 
-nav{
-height:60px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:0 30px;
-background:#000;
-border-bottom:1px solid #222;
+#chat{
+height:70vh;
+overflow-y:auto;
+padding:20px;
+background:white;
 }
 
-.logo{
-font-family:'Barlow Condensed',sans-serif;
-font-size:28px;
-color:var(--accent);
-font-weight:900;
-}
-
-section{
-max-width:900px;
-margin:auto;
-padding:80px 20px;
-}
-
-h1{
-font-size:48px;
-font-weight:900;
-margin-bottom:20px;
-}
-
-h2{
-margin-bottom:20px;
-}
-
-p{
-color:#aaa;
-line-height:1.7;
-}
-
-.hero{
-text-align:center;
-padding-top:120px;
-}
-
-.card{
-background:var(--card);
-border:1px solid var(--border);
-padding:30px;
-border-radius:6px;
-margin-top:30px;
-}
-
-/* CHAT */
-
-.chat-box{
-height:350px;
-overflow:auto;
-background:#0d0d0d;
-border:1px solid #333;
-padding:15px;
-font-size:14px;
+.message{
+margin:10px 0;
 }
 
 .user{
-color:#fff;
-margin-bottom:10px;
+color:#333;
 }
 
 .ai{
-color:#6fa8ff;
-margin-bottom:15px;
+color:#0066ff;
 }
 
-.input-area{
+#inputArea{
 display:flex;
-margin-top:10px;
+padding:10px;
+background:#eee;
 }
 
-input{
+#userInput{
 flex:1;
 padding:10px;
-border:none;
-background:#111;
-color:#fff;
+font-size:16px;
 }
 
 button{
-width:80px;
-background:var(--accent);
-border:none;
-color:#000;
-font-weight:bold;
-cursor:pointer;
+padding:10px 20px;
+font-size:16px;
 }
-
-button:hover{
-opacity:.8;
-}
-
 </style>
+
 </head>
 
 <body>
 
-<nav>
-<div class="logo">VETO</div>
-</nav>
+<h2 style="text-align:center">VETO AI 相談</h2>
 
+<div id="chat"></div>
 
-<section class="hero">
-
-<h1>NOと言える、唯一の外部脳</h1>
-
-<p>
-AIがあなたの意思決定をサポートする  
-外部ブレインシステム
-</p>
-
-</section>
-
-
-
-<section>
-
-<h2>VETOとは</h2>
-
-<p>
-VETOは「判断支援AI」です。  
-経営、効率化、AI導入などの相談をAIが整理し  
-最適な意思決定をサポートします。
-</p>
-
-</section>
-
-
-
-<section>
-
-<h2>料金</h2>
-
-<div class="card">
-
-<p>
-
-AI相談  
-無料：1000相談まで  
-
-1000件突破後  
-企業導入プランへ
-
-</p>
-
+<div id="inputArea">
+<input id="userInput" placeholder="相談内容を入力">
+<button onclick="sendMessage()">送信</button>
 </div>
-
-</section>
-
-
-
-<section>
-
-<h2>AI相談</h2>
-
-<div class="card">
-
-<div id="chat" class="chat-box"></div>
-
-<div class="input-area">
-<input id="input" placeholder="相談を書く">
-<button onclick="send()">送信</button>
-</div>
-
-</div>
-
-</section>
-
-
 
 <script>
 
+let messageCount = 0;
+const FREE_LIMIT = 3;
+
+function addMessage(text, className){
+
 const chat = document.getElementById("chat");
 
-function addUser(text){
+const div = document.createElement("div");
+div.className = "message " + className;
+div.textContent = text;
 
-chat.innerHTML += `<div class="user">あなた: ${text}</div>`
+chat.appendChild(div);
 
-}
-
-function addAI(text){
-
-chat.innerHTML += `<div class="ai">VETO: ${text}</div>`
-
-chat.scrollTop = chat.scrollHeight
+chat.scrollTop = chat.scrollHeight;
 
 }
 
+async function sendMessage(){
 
-async function send(){
+const input = document.getElementById("userInput");
+const message = input.value.trim();
 
-const input = document.getElementById("input")
-const message = input.value
+if(!message) return;
 
-if(!message) return
+addMessage("あなた: " + message,"user");
 
-addUser(message)
+input.value="";
 
-input.value=""
+messageCount++;
+
+if(messageCount > FREE_LIMIT){
+
+addMessage(
+"🤖 VETO AI診断はここまでです。\n\n詳しいAI改善プランを作成します。\n\nAIコンサル診断 ¥1000\n\nhttps://example.com",
+"ai"
+);
+
+return;
+
+}
 
 try{
 
 const res = await fetch("/api/consult",{
+method:"POST",
 headers:{
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
 message:message
 })
-})
+});
 
-const data = await res.json()
+const data = await res.json();
 
-console.log("AI response:", data)
-
-let text = "AI応答なし"
-
-if(data.candidates && data.candidates.length > 0){
-const parts = data.candidates[0].content.parts
-text = parts.map(p => p.text).join("")
-}
-
-addAI(text)
+addMessage("VETO AI: " + data.reply,"ai");
 
 }catch(e){
 
-console.error(e)
-addAI("AIエラー")
+addMessage("AIエラー","ai");
 
 }
 
 }
+
 </script>
 
 </body>
