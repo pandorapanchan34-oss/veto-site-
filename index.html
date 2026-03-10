@@ -225,7 +225,6 @@ chat.scrollTop = chat.scrollHeight
 async function send(){
 
 const input = document.getElementById("input")
-
 const message = input.value
 
 if(!message) return
@@ -248,16 +247,19 @@ message:message
 
 const data = await res.json()
 
-addAI(data.text)
+console.log("AI response:",data)
+
+addAI(data.text || "AI応答なし")
 
 }catch(e){
+
+console.error(e)
 
 addAI("AIエラー")
 
 }
 
 }
-
 </script>
 
 </body>
