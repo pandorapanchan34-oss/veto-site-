@@ -1,4 +1,5 @@
 export default async function handler(req, res) {
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -6,6 +7,7 @@ export default async function handler(req, res) {
   const { message } = req.body;
 
   try {
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -27,26 +29,28 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    // Anthropic側からエラーが返ってきた場合の処理
+    console.log("Claude response:", data);
+
     if (!response.ok) {
-      console.error("Anthropic API Error:", data);
-      return res.status(response.status).json({ error: data.error?.message || "API Error" });
+      return res.status(500).json({
+        error: data.error || "Claude API error"
+      });
     }
 
-    // データ構造の安全な確認
-    if (data.content && data.content.length > 0) {
-      return res.status(200).json({
-        reply: data.content[0].text
-      });
-    } else {
-      throw new Error("Unexpected API response format");
-    }
+    const reply = data.content?.[0]?.text || "AI応答取得失敗";
+
+    res.status(200).json({
+      reply: reply
+    });
 
   } catch (error) {
-    console.error("Internal Server Error:", error);
+
+    console.error(error);
+
     res.status(500).json({
-      error: "Internal Server Error",
-      details: error.message
+      error: "Server error"
     });
+
   }
+
 }
