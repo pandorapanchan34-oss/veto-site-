@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VETO — NOと言える、唯一の外部脳</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Noto+Sans+JP:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090909;--surface:#111;--card:#161616;--border:#222;--accent:#d4870a;--danger:#c0281c;--green:#22a855;--text:#ede8dc;--muted:#555;--dim:#2a2a2a;--mono:'JetBrains Mono',monospace;--cond:'Barlow Condensed',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;line-height:1.6;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:9000;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:56px;display:flex;justify-content:space-between;align-items:center;padding:0 40px;background:rgba(9,9,9,0.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--cond);font-size:28px;font-weight:900;letter-spacing:2px;color:var(--accent);text-decoration:none;}
+.nav-status{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:2px;display:flex;align-items:center;gap:6px;}
+.blink-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s step-end infinite;}
+.nav-links{display:flex;align-items:center;gap:22px;}
+.nav-link{font-family:var(--mono);font-size:11px;letter-spacing:1px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color 0.15s;}
+.nav-link:hover{color:var(--text);}
+.nav-cta{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--bg);background:var(--accent);padding:8px 16px;text-decoration:none;transition:opacity 0.15s;}
+.nav-cta:hover{opacity:0.8;}
+.hero{min-height:100vh;padding-top:56px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding-left:2rem;padding-right:2rem;border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.hero-bg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--cond);font-size:clamp(180px,30vw,380px);font-weight:900;color:transparent;-webkit-text-stroke:1px rgba(212,135,10,0.05);letter-spacing:-8px;pointer-events:none;white-space:nowrap;}
+.status-bar{font-family:var(--mono);font-size:0.72rem;color:var(--muted);border:1px solid var(--border);padding:0.5rem 1.2rem;margin-bottom:2rem;letter-spacing:2px;position:relative;z-index:1;}
+.hero h1{font-family:var(--cond);font-size:clamp(80px,14vw,150px);font-weight:900;line-height:0.85;letter-spacing:-0.03em;color:var(--accent);margin-bottom:1rem;position:relative;z-index:1;}
+.hero-sub{font-size:clamp(15px,2vw,20px);font-weight:700;max-width:580px;margin-bottom:0.6rem;position:relative;z-index:1;}
+.hero-sub2{font-size:14px;color:var(--muted);max-width:540px;margin-bottom:2.5rem;position:relative;z-index:1;font-weight:300;line-height:1.9;}
+.hero-sub2 strong{color:var(--text);}
+.db-counter{display:flex;justify-content:space-between;align-items:center;padding:1.6rem 2rem;border:1px solid var(--border);background:var(--surface);max-width:620px;width:100%;position:relative;z-index:1;margin-bottom:1.5rem;}
+.db-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
+.db-number{font-family:var(--mono);font-size:clamp(32px,5vw,52px);color:var(--accent);line-height:1;}
+.db-total{font-size:0.4em;color:var(--muted);}
+.db-bar-wrap{width:200px;}
+.db-bar-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:5px;letter-spacing:1px;}
+.db-bar{height:4px;background:var(--dim);}
+.db-bar-fill{height:100%;background:var(--accent);width:0;transition:width 1.5s cubic-bezier(.22,1,.36,1);}
+.db-pct-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;letter-spacing:1px;}
+.hero-btns{display:flex;gap:14px;position:relative;z-index:1;flex-wrap:wrap;justify-content:center;}
+.btn{display:inline-block;padding:0.85rem 1.8rem;background:none;border:1px solid var(--text);color:var(--text);text-decoration:none;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:0.2s;}
+.btn:hover{background:var(--text);color:var(--bg);}
+.btn-accent{border-color:var(--accent);color:var(--accent);}
+.btn-accent:hover{background:var(--accent);color:var(--bg);}
+.warning-section{background:var(--surface);padding:5rem 2rem;border-bottom:1px solid var(--danger);}
+.container{max-width:1040px;margin:0 auto;padding:0 32px;}
+.no-text{font-family:var(--cond);color:var(--danger);font-weight:900;font-size:clamp(48px,8vw,96px);margin-bottom:1rem;line-height:1;}
+.warning-body{font-size:1.05rem;max-width:660px;line-height:2;margin-bottom:1.5rem;color:var(--muted);}
+.warning-body strong{color:var(--text);}
+.terminal-line{font-family:var(--mono);font-size:0.78rem;color:var(--muted);margin-top:6px;}
+.cursor{display:inline-block;width:8px;height:1em;background:var(--accent);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px;}
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);}
+.stat-cell{background:var(--card);padding:32px 28px;border-right:1px solid var(--border);}
+.stat-cell:last-child{border-right:none;}
+.stat-num{font-family:var(--cond);font-size:clamp(36px,4vw,58px);font-weight:900;color:var(--danger);line-height:1;margin-bottom:6px;}
+.stat-label{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;line-height:1.6;text-transform:uppercase;}
+.stat-source{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:5px;}
+.section{padding:72px 0;border-bottom:1px solid var(--border);}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:32px;}
+.sec-num{font-family:var(--mono);font-size:10px;letter-spacing:3px;color:var(--muted);}
+.sec-title{font-family:var(--cond);font-size:clamp(22px,3vw,34px);font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.sec-desc{font-size:14px;color:var(--muted);max-width:580px;line-height:1.9;margin-bottom:32px;font-weight:300;}
+.sec-desc strong{color:var(--text);}
+.pattern-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);}
+.pattern-card{background:var(--card);padding:20px 18px;position:relative;transition:background 0.15s;}
+.pattern-card:hover{background:#1c1c1c;}
+.pattern-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.pattern-name{font-size:13px;font-weight:700;line-height:1.5;flex:1;}
+.pattern-pct{font-family:var(--cond);font-size:26px;font-weight:900;color:var(--danger);line-height:1;white-space:nowrap;}
+.pattern-pct .unit{font-size:13px;color:var(--muted);}
+.pattern-bar{height:2px;background:var(--dim);margin-bottom:9px;overflow:hidden;}
+.pattern-bar-fill{height:100%;background:var(--danger);width:0;transition:width 1.2s cubic-bezier(.22,1,.36,1);}
+.pattern-desc{font-size:12px;color:var(--muted);line-height:1.7;}
+.pattern-source{position:absolute;bottom:7px;right:10px;font-family:var(--mono);font-size:9px;color:var(--dim);}
+
+/* ── CHAT (STEP診断型) ── */
+.chat-wrap{display:grid;grid-template-columns:300px 1fr;border:1px solid var(--border);}
+.chat-info{padding:32px 24px;border-right:1px solid var(--border);background:var(--surface);}
+.chat-no{font-family:var(--cond);font-size:52px;font-weight:900;color:var(--danger);line-height:1;}
+.chat-info-title{font-family:var(--cond);font-size:26px;font-weight:700;line-height:1.2;margin:10px 0 12px;}
+.chat-info-title em{font-style:normal;color:var(--accent);}
+.chat-info-desc{font-size:12px;color:var(--muted);line-height:2;margin-bottom:20px;font-weight:300;}
+.chat-info-desc strong{color:var(--text);}
+
+/* STEPインジケーター */
+.step-indicator{display:flex;flex-direction:column;gap:8px;margin-top:4px;}
+.step-item{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:10px;color:var(--muted);padding:8px 10px;border-left:2px solid var(--dim);transition:all 0.3s;}
+.step-item.active{color:var(--accent);border-left-color:var(--accent);}
+.step-item.done{color:var(--green);border-left-color:var(--green);}
+.step-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.step-label{line-height:1.4;}
+
+.chat-window{display:flex;flex-direction:column;background:var(--bg);}
+.chat-header{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+.chat-av{width:32px;height:32px;background:var(--danger);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.chat-hname{font-size:13px;font-weight:700;}
+.chat-hstatus{font-family:var(--mono);font-size:10px;color:var(--green);display:flex;align-items:center;gap:4px;}
+.chat-hstatus::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;display:block;}
+
+/* メッセージ */
+#chatMessages{flex:1;padding:18px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;min-height:360px;max-height:440px;}
+.chat-msg{display:flex;align-items:flex-start;gap:9px;}
+.chat-msg.user{flex-direction:row-reverse;}
+.chat-av-sm{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.chat-av-sm.bot{background:var(--danger);}
+.chat-av-sm.usr{background:var(--border);font-family:var(--mono);font-size:9px;color:var(--text);}
+.chat-bubble{padding:10px 14px;font-size:12px;line-height:1.8;max-width:320px;}
+.chat-msg.bot .chat-bubble{background:var(--card);border:1px solid var(--border);}
+.chat-msg.user .chat-bubble{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+
+/* STEPバッジ */
+.step-badge{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:2px;padding:3px 8px;margin-bottom:6px;}
+.step-badge.s1{background:rgba(212,135,10,0.15);color:var(--accent);border:1px solid rgba(212,135,10,0.3);}
+.step-badge.s2{background:rgba(42,127,212,0.15);color:#2a7fd4;border:1px solid rgba(42,127,212,0.3);}
+.step-badge.s3{background:rgba(34,168,85,0.15);color:var(--green);border:1px solid rgba(34,168,85,0.3);}
+.step-badge.warn{background:rgba(192,40,28,0.15);color:var(--danger);border:1px solid rgba(192,40,28,0.3);}
+.step-badge.rec{background:rgba(212,240,80,0.15);color:#d4f050;border:1px solid rgba(212,240,80,0.3);}
+
+.typing-wrap{display:flex;gap:3px;padding:4px 0;}
+.typing-dot{width:5px;height:5px;background:var(--muted);border-radius:50%;animation:typeDot 1.2s ease-in-out infinite;}
+.typing-dot:nth-child(2){animation-delay:0.2s;}
+.typing-dot:nth-child(3){animation-delay:0.4s;}
+
+.chat-input-row{background:var(--surface);border-top:1px solid var(--border);padding:12px 18px;display:flex;gap:9px;align-items:flex-end;}
+#chatInput{flex:1;background:var(--bg);border:1px solid var(--border);padding:9px 12px;font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--text);outline:none;resize:none;min-height:38px;max-height:90px;line-height:1.6;transition:border-color 0.2s;}
+#chatInput:focus{border-color:var(--accent);}
+#chatSend{background:var(--accent);color:var(--bg);border:none;padding:9px 16px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;height:38px;}
+#chatSend:hover{opacity:0.8;}
+#chatSend:disabled{opacity:0.4;cursor:not-allowed;}
+.chat-note{padding:7px 18px;font-family:var(--mono);font-size:9px;color:var(--muted);background:var(--surface);border-top:1px solid var(--border);}
+
+/* GUARANTEE */
+.guarantee{background:var(--surface);border-top:3px solid var(--danger);}
+.guarantee-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);margin-top:36px;}
+.g-card{background:var(--card);padding:24px 20px;}
+.g-card.hl{background:#140000;border-top:2px solid var(--danger);}
+.g-full{grid-column:1/-1;}
+.g-num{font-family:var(--cond);font-size:44px;font-weight:900;color:var(--danger);line-height:1;margin-bottom:4px;}
+.g-lbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:10px;}
+.g-desc{font-size:12px;color:var(--muted);line-height:1.8;}
+.g-desc strong{color:var(--text);}
+.g-flow{display:flex;flex-direction:column;gap:2px;margin-top:14px;}
+.g-step{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:10px 12px;background:var(--bg);border-left:2px solid var(--dim);font-size:12px;color:var(--muted);line-height:1.6;}
+.g-step.on{border-left-color:var(--danger);}
+.g-step strong{color:var(--text);}
+.g-sn{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--danger);}
+.g-note{margin-top:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--danger);font-family:var(--mono);font-size:11px;color:var(--muted);line-height:1.8;}
+
+/* SERVICES */
+.coming-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);border:1px solid var(--border);}
+.coming-card{background:var(--card);padding:26px 20px;}
+.coming-card.live{background:#120a00;border-top:3px solid var(--accent);}
+.c-status{font-family:var(--mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.ls{color:var(--accent);}.ss{color:var(--muted);}
+.c-price{font-family:var(--cond);font-size:34px;font-weight:900;margin-bottom:4px;line-height:1;}
+.c-psub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:12px;}
+.c-title{font-size:14px;font-weight:700;margin-bottom:7px;line-height:1.4;}
+.c-desc{font-size:12px;color:var(--muted);line-height:1.8;}
+.c-bar{margin-top:16px;height:2px;background:var(--dim);}
+.c-bar-fill{height:100%;background:var(--accent);width:0;transition:width 1.5s ease;}
+.c-bar-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:4px;}
+
+/* FOLLOW */
+.follow-section{background:var(--surface);border-bottom:1px solid var(--border);padding:72px 0;}
+.follow-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.follow-title{font-family:var(--cond);font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1;letter-spacing:-1px;text-transform:uppercase;margin-bottom:14px;}
+.follow-title em{font-style:normal;color:var(--accent);}
+.follow-desc{font-size:14px;color:var(--muted);line-height:1.9;font-weight:300;}
+.follow-desc strong{color:var(--text);}
+.x-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--accent);color:var(--bg);font-family:var(--mono);font-size:13px;font-weight:700;padding:18px 28px;text-decoration:none;letter-spacing:1px;transition:opacity 0.15s;margin-bottom:14px;}
+.x-btn:hover{opacity:0.85;}
+.follow-note{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:center;line-height:1.8;}
+.preview-card{background:var(--card);border:1px solid var(--border);padding:18px 20px;margin-top:16px;}
+.preview-handle{font-family:var(--mono);font-size:10px;color:var(--accent);margin-bottom:8px;}
+.preview-text{font-size:13px;color:var(--muted);line-height:1.9;}
+.preview-tags{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:8px;}
+
+footer{padding:44px 0 28px;border-top:1px solid var(--border);}
+.footer-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+.footer-logo{font-family:var(--cond);font-size:34px;font-weight:900;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.footer-desc{font-size:13px;color:var(--muted);line-height:1.8;max-width:340px;}
+.footer-right{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:2.4;text-align:right;}
+.footer-right a{color:var(--accent);text-decoration:none;}
+@keyframes blink{50%{opacity:0;}}
+@keyframes typeDot{0%,60%,100%{transform:translateY(0);opacity:0.4;}30%{transform:translateY(-5px);opacity:1;}}
+@media(max-width:800px){
+  nav{padding:0 16px;}.nav-status{display:none;}
+  .stats-strip,.pattern-grid,.guarantee-grid,.coming-grid,.footer-inner{grid-template-columns:1fr;}
+  .chat-wrap{grid-template-columns:1fr;}.chat-info{display:none;}
+  .follow-inner{grid-template-columns:1fr;}
+  .footer-right{text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">VETO</a>
+  <div class="nav-status"><div class="blink-dot"></div>PRE-LAUNCH — DB COLLECTION PHASE</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#patterns">失敗パターン</a>
+    <a class="nav-link" href="#consult">無料相談</a>
+    <a class="nav-link" href="#guarantee">2年保証</a>
+    <a class="nav-link" href="https://x.com/pandorapanchan1" target="_blank" style="display:flex;align-items:center;gap:4px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      @pandorapanchan1
+    </a>
+    <a class="nav-cta" href="#follow">FOLLOW</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg">VETO</div>
+  <div class="status-bar" id="statusBar">PROJECT: VETO // STATUS: PRE-LAUNCH // CONSULTATIONS: 042</div>
+  <h1>VETO</h1>
+  <p class="hero-sub">「それ、やめときましょう。」<br>データに基づき、あなたの失敗を拒否する。</p>
+  <p class="hero-sub2">AIを導入した企業の<strong>95%が成果ゼロ</strong>。失敗パターンは決まっている。<br>十分なデータが揃った時点で、唯一の「NO」を売り始める。</p>
+  <div class="db-counter">
+    <div>
+      <div class="db-label">COLLECTED CONSULTATIONS</div>
+      <div class="db-number"><span id="cntDisp">042</span><span class="db-total">/500</span></div>
+    </div>
+    <div class="db-bar-wrap">
+      <div class="db-bar-lbl">LAUNCH GATE: 500件達成で販売開始</div>
+      <div class="db-bar"><div class="db-bar-fill" id="heroBar"></div></div>
+      <div class="db-pct-lbl" id="heroPct">8.4% COMPLETE</div>
+    </div>
+  </div>
+  <div class="hero-btns">
+    <a class="btn btn-accent" href="#consult">AI失敗を相談する（無料）</a>
+    <a class="btn" href="#guarantee">2年全額返金保証とは</a>
+  </div>
+</section>
+
+<section class="warning-section">
+  <div class="container">
+    <div class="no-text">NO.</div>
+    <p class="warning-body">世界は「新しい挑戦」を称賛しすぎている。<br>しかし、その9割はデータが予見できる<strong>「必然的な失敗」</strong>だ。<br>ベンダーは売りたい。コンサルは受注したい。誰も「やめろ」と言わない。<br>VETOは、あなたのプロジェクトに<strong>『拒否権』を行使するために存在する。</strong></p>
+    <div class="terminal-line">&gt; INITIALIZING VETO SYSTEM...<span class="cursor"></span></div>
+    <div class="terminal-line" id="termLine">&gt; FAILURE DB: LOADING [042/500]...<span class="cursor"></span></div>
+  </div>
+</section>
+
+<div class="stats-strip">
+  <div class="stat-cell"><div class="stat-num">95%</div><div class="stat-label">AI投資<br>ゼロリターン率</div><div class="stat-source">MIT NANDA調査 2024 N=300社</div></div>
+  <div class="stat-cell"><div class="stat-num">80%</div><div class="stat-label">AIプロジェクト<br>全体失敗率</div><div class="stat-source">RAND Corporation / 複数調査平均</div></div>
+  <div class="stat-cell"><div class="stat-num">70%</div><div class="stat-label">失敗原因が<br>技術ではなく組織</div><div class="stat-source">エクサウィザーズ調査 2024</div></div>
+</div>
+
+<section class="section" id="patterns">
+  <div class="container">
+    <div class="sec-head"><span class="sec-num">01 —</span><span class="sec-title">FAILURE PATTERNS</span></div>
+    <p class="sec-desc"><strong>失敗のパターンは9種類に収束する。</strong>あなたの計画は、すでにどれかに当てはまっている。</p>
+    <div class="pattern-grid" id="patGrid">
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">リテラシー・スキル不足型</div><div class="pattern-pct">70<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="70"></div></div><div class="pattern-desc">「とりあえず入れた」後、誰も使いこなせない。研修なし・ガイドなし。最頻出。</div><div class="pattern-source">NRI 2025 N=517社</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">目的・KPI不在型</div><div class="pattern-pct">54<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="54"></div></div><div class="pattern-desc">何のために入れるかが曖昧なまま導入。失敗しているかすら判定できない状態に。</div><div class="pattern-source">情報通信総研 2024</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">現場拒絶サイレント型</div><div class="pattern-pct">51<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="51"></div></div><div class="pattern-desc">経営が「全員賛成」と思っているが現場は黙って従来通り。AIは起動中、誰も使わず。</div><div class="pattern-source">PwC Japan 2025</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">AI信頼性欠如型</div><div class="pattern-pct">54<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="54"></div></div><div class="pattern-desc">誰もAIの出力を信頼せず、人間が全件確認。二重作業で工数が逆に増加する。</div><div class="pattern-source">Qlik調査 N=4,200</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">シャドーAI蔓延型</div><div class="pattern-pct">90<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="90"></div></div><div class="pattern-desc">公式AIが機能せず、従業員の9割が個人で無断利用。情報漏洩リスク制御不能。</div><div class="pattern-source">MIT NANDA 2024</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">短期成果強制型</div><div class="pattern-pct">40<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="40"></div></div><div class="pattern-desc">「3ヶ月で成果を出せ」。AIの定着には時間がかかり、効果が出る前に撤退。</div><div class="pattern-source">複数調査推計</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">AI幻覚実害型</div><div class="pattern-pct">30<span class="unit">%↑</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="30"></div></div><div class="pattern-desc">存在しない法令・数値を生成。法務・財務に誤用され訴訟・罰金へ。</div><div class="pattern-source">MIT Tech Review 2025</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">ベンダーロック崩壊型</div><div class="pattern-pct">25<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="25"></div></div><div class="pattern-desc">依存後にAPI廃止・価格改定・サービス終了で詰む。撤退コストが膨張する。</div><div class="pattern-source">複数調査推計</div></div>
+      <div class="pattern-card"><div class="pattern-top"><div class="pattern-name">スコープ爆発型</div><div class="pattern-pct">35<span class="unit">%</span></div></div><div class="pattern-bar"><div class="pattern-bar-fill" data-w="35"></div></div><div class="pattern-desc">要件が無制限に膨らんで何もできない中途半端なシステムになる。</div><div class="pattern-source">AI経営総研 2025</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CHAT (STEP診断型) -->
+<section class="section" id="consult" style="padding-top:0;">
+  <div class="container">
+    <div class="sec-head"><span class="sec-num">02 —</span><span class="sec-title">FREE AI CONSULTATION</span></div>
+    <p class="sec-desc"><strong>3ステップ診断。</strong>導入目的 → 組織体制 → 技術リスクの順に確認し、失敗パターンと照合する。</p>
+    <div class="chat-wrap">
+      <div class="chat-info">
+        <div class="chat-no">NO</div>
+        <h3 class="chat-info-title">VETOが<em>「やめろ」</em>と言える理由</h3>
+        <p class="chat-info-desc">ベンダーは売りたい。コンサルは受注したい。<strong>誰にも「やめろ」と言うインセンティブがない。</strong><br><br>VETOは失敗DBが収益源。利益相反ゼロ。</p>
+        <div class="step-indicator">
+          <div class="step-item active" id="si1"><div class="step-dot"></div><div class="step-label">STEP 1<br>導入目的確認</div></div>
+          <div class="step-item" id="si2"><div class="step-dot"></div><div class="step-label">STEP 2<br>組織体制確認</div></div>
+          <div class="step-item" id="si3"><div class="step-dot"></div><div class="step-label">STEP 3<br>技術・リスク確認</div></div>
+        </div>
+      </div>
+      <div class="chat-window">
+        <div class="chat-header">
+          <div class="chat-av">🚫</div>
+          <div>
+            <div class="chat-hname">VETO — AI失敗診断（Claude AI）</div>
+            <div class="chat-hstatus">ONLINE — 3-STEP DIAGNOSIS</div>
+          </div>
+        </div>
+        <div id="chatMessages">
+          <div class="chat-msg bot">
+            <div class="chat-av-sm bot">🚫</div>
+            <div class="chat-bubble">
+              <span class="step-badge s1">STEP 1 — 導入目的確認</span><br>
+              VETO診断を開始します。<br><br>
+              どんなAI導入を検討、または実施していますか？<br>
+              まず「何のためにAIを入れるのか」を教えてください。<br><br>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--muted);">※ 社名・個人名は不要です</span>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chatInput" placeholder="例：営業部門の資料作成を効率化したい…" rows="2"></textarea>
+          <button id="chatSend" onclick="sendMsg()">SEND →</button>
+        </div>
+        <div class="chat-note">🔒 ANONYMOUS — Claude AI搭載 — 相談1件 = DB +1カウント（サーバー側で管理）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section guarantee" id="guarantee">
+  <div class="container">
+    <div class="sec-head"><span class="sec-num">03 —</span><span class="sec-title">2-YEAR FULL REFUND GUARANTEE</span></div>
+    <p class="sec-desc"><strong>提言通りに実行して失敗したら、全額返金します。</strong>これは約束ではなく、顧客を選別するフィルターとして機能する。</p>
+    <div class="guarantee-grid">
+      <div class="g-card hl">
+        <div class="g-num">100%</div>
+        <div class="g-lbl">REFUND — 返金上限</div>
+        <div class="g-desc"><strong>受領済み報酬の全額を返金。</strong>保証は「成功の約束」ではなく<strong>「誠実な提言の保証」</strong>。提言を実行したにもかかわらず失敗した場合のみ、VETOの診断ミスとして全額返金する。</div>
+      </div>
+      <div class="g-card">
+        <div class="g-num">3+1</div>
+        <div class="g-lbl">CONDITIONS — 保証発動条件</div>
+        <div class="g-desc"><strong>入口3条件：</strong>①聞き入れスコア21点以上 ②C-suite署名の誓約書 ③失敗定義合意書への事前合意<br><br><strong>継続条件：</strong>提言実行率80%以上を2年間維持。</div>
+      </div>
+      <div class="g-card g-full">
+        <div class="g-lbl">REFUND DECISION FLOW — 返金判定フロー</div>
+        <div class="g-flow">
+          <div class="g-step on"><div class="g-sn">01</div><div><strong>入口3条件で顧客を選別</strong><br>聞き入れスコア21点以上・C-suite署名・失敗定義合意書の3条件を全て満たした企業のみ保証対象。</div></div>
+          <div class="g-step on"><div class="g-sn">02</div><div><strong>提言実行記録を毎月蓄積</strong><br>月次の提言書・実行確認書・KPIレポートを双方が署名して保管。「実行しなかった」記録が免責根拠になる。</div></div>
+          <div class="g-step on"><div class="g-sn">03</div><div><strong>判定ツリーで返金額を確定</strong><br>提言実行率80%以上・外部起因なし・アラート無視なし——全条件を満たして初めて返金。</div></div>
+          <div class="g-step"><div class="g-sn">04</div><div><strong>返金発生率は5〜10%と試算</strong><br>財務モデル上、最悪10%返金でも営業利益¥20M維持。</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="g-note">⚠ 免責事由（抜粋）：提言実行率80%未満 / S優先度提言の未実行 / 警告アラートの無視 / 外部市場崩壊・天災 / 情報虚偽 / 契約外スコープ<br>※ 実際の契約書は弁護士レビュー済みのものを使用します。</div>
+  </div>
+</section>
+
+<section class="section" id="services">
+  <div class="container">
+    <div class="sec-head"><span class="sec-num">04 —</span><span class="sec-title">SERVICES — LOCKED UNTIL DB READY</span></div>
+    <p class="sec-desc"><strong>データが揃うまで売らない。</strong>DBが500件に達した時点でセルフ診断を、1,000件で専門家診断を解放する。</p>
+    <div class="coming-grid">
+      <div class="coming-card live">
+        <div class="c-status ls">● NOW ACTIVE</div>
+        <div class="c-price">FREE</div>
+        <div class="c-psub">無料 / 匿名OK / Claude AI搭載</div>
+        <div class="c-title">AI失敗 無料相談チャット</div>
+        <div class="c-desc">3ステップ診断。失敗パターン9種との照合。相談1件でDBカウント+1。</div>
+        <div class="c-bar"><div class="c-bar-fill" id="cBar1"></div></div>
+        <div class="c-bar-lbl" id="cLbl1">収集進捗 8.4%</div>
+      </div>
+      <div class="coming-card" style="opacity:0.65;">
+        <div class="c-status ss">○ LOCKED — DB 500件で解放</div>
+        <div class="c-price">¥49,800</div>
+        <div class="c-psub">/ 診断レポート1回</div>
+        <div class="c-title">セルフ診断 リスクスコアレポート</div>
+        <div class="c-desc">30問の問診票 → 失敗DB照合 → リスクスコアと優先修正3点をPDFで納品。</div>
+        <div class="c-bar"><div class="c-bar-fill" id="cBar2"></div></div>
+        <div class="c-bar-lbl" id="cLbl2">収集進捗 8.4%</div>
+      </div>
+      <div class="coming-card" style="opacity:0.4;">
+        <div class="c-status ss">○ LOCKED — DB 1,000件 + 2年全額返金保証</div>
+        <div class="c-price">¥500K〜</div>
+        <div class="c-psub">/ 件 + 2年全額返金保証</div>
+        <div class="c-title">プレ・モーテム 専門家診断</div>
+        <div class="c-desc">導入計画書を提出 → 専門家が類似失敗事例と照合 → 「失敗シナリオレポート」を2週間で納品。提言実行後に失敗したら全額返金。</div>
+        <div class="c-bar"><div class="c-bar-fill" style="width:0%;"></div></div>
+        <div class="c-bar-lbl">準備中</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="follow-section" id="follow">
+  <div class="container">
+    <div class="follow-inner">
+      <div>
+        <div class="follow-title">FOLLOW ON<em> X</em></div>
+        <p class="follow-desc">DB 500件達成の瞬間、<strong>Xで最初に発表します。</strong><br>AI失敗パターンの解説・リアルタイムニュース解説も随時投稿。</p>
+      </div>
+      <div>
+        <a class="x-btn" href="https://x.com/pandorapanchan1" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @pandorapanchan1 をフォローする
+        </a>
+        <p class="follow-note">販売開始・DB進捗・AI失敗ニュースをXで発信します。</p>
+        <div class="preview-card">
+          <div class="preview-handle">@pandorapanchan1</div>
+          <div class="preview-text">🚫 AIで失敗したパターン、9種類に分類できました。<br>最多は「現場が誰も使ってない」型（51%）。<br>経営陣は「全員賛成」と思ってる。</div>
+          <div class="preview-tags">#AI失敗 #DX失敗 #VETO</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">VETO</div>
+        <p class="footer-desc">AIで失敗する計画に「NO」を言う。失敗を防ぐサービス。DB 500件達成後に販売を開始します。</p>
+      </div>
+      <div class="footer-right">
+        STATUS: PRE-LAUNCH / DB COLLECTION<br>
+        CONSULTATIONS: <span id="footerCnt">042</span> / 500<br>
+        PHASE 1: DB 500件達成後<br>
+        PHASE 2: DB 1,000件達成後<br>
+        X: <a href="https://x.com/pandorapanchan1" target="_blank">@pandorapanchan1</a><br><br>
+        © 2025 VETO<br>
+        ※本サービスは情報提供目的であり、特定の成果を保証しません。
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+var TARGET = 500;
+
+// ── STEPインジケーター管理 ──
+var currentStep = 1;
+function updateStepUI(step) {
+  currentStep = step;
+  ['si1','si2','si3'].forEach(function(id, i) {
+    var el = document.getElementById(id);
+    el.className = 'step-item';
+    if (i + 1 < step) el.classList.add('done');
+    else if (i + 1 === step) el.classList.add('active');
+  });
+}
+
+// ── カウンターUIを更新 ──
+function refreshUI(count) {
+  var pct = Math.min(100, count / TARGET * 100).toFixed(1);
+  var p3 = String(count).padStart(3,'0');
+  document.getElementById('cntDisp').textContent = p3;
+  document.getElementById('footerCnt').textContent = p3;
+  document.getElementById('statusBar').textContent = 'PROJECT: VETO // STATUS: PRE-LAUNCH // CONSULTATIONS: ' + p3;
+  document.getElementById('termLine').innerHTML = '&gt; FAILURE DB: LOADING [' + p3 + '/500]...<span class="cursor"></span>';
+  document.getElementById('heroBar').style.width = pct + '%';
+  document.getElementById('heroPct').textContent = pct + '% COMPLETE';
+  document.getElementById('cBar1').style.width = pct + '%';
+  document.getElementById('cBar2').style.width = pct + '%';
+  document.getElementById('cLbl1').textContent = '収集進捗 ' + pct + '%';
+  document.getElementById('cLbl2').textContent = '収集進捗 ' + pct + '%';
+}
+
+// ── サーバーからカウント取得 ──
+async function fetchCount() {
+  try {
+    var r = await fetch('/api/count');
+    var d = await r.json();
+    refreshUI(d.count);
+  } catch(e) {
+    // サーバーなければlocalStorageにフォールバック
+    var saved = parseInt(localStorage.getItem('veto_cnt') || '42');
+    refreshUI(Math.max(42, saved));
+  }
+}
+
+// ── サーバーにカウント+1を送る ──
+async function incrementCount() {
+  try {
+    var r = await fetch('/api/count', { method: 'POST' });
+    var d = await r.json();
+    refreshUI(d.count);
+  } catch(e) {
+    // フォールバック
+    var n = (parseInt(localStorage.getItem('veto_cnt') || '42')) + 1;
+    localStorage.setItem('veto_cnt', String(n));
+    refreshUI(n);
+  }
+}
+
+window.addEventListener('load', function() {
+  refreshUI(42);
+});
+
+// ── パターンバー ──
+new IntersectionObserver(function(es) {
+  es.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.pattern-bar-fill').forEach(function(b) {
+        b.style.width = b.dataset.w + '%';
+      });
+    }
+  });
+}, { threshold: 0.1 }).observe(document.getElementById('patGrid'));
+
+// ── STEPバッジのクラスを返す ──
+function getBadgeClass(text) {
+  if (text.includes('STEP 1')) return 's1';
+  if (text.includes('STEP 2')) return 's2';
+  if (text.includes('STEP 3')) return 's3';
+  if (text.includes('WARNING') || text.includes('⚠')) return 'warn';
+  if (text.includes('RECOMMENDATION')) return 'rec';
+  return 's1';
+}
+
+// ── STEPを本文から検出してインジケーターを更新 ──
+function detectStep(text) {
+  if (text.includes('STEP 3')) updateStepUI(3);
+  else if (text.includes('STEP 2')) updateStepUI(2);
+}
+
+// ── メッセージ追加 ──
+function addBubble(text, isUser) {
+  var box = document.getElementById('chatMessages');
+  var d = document.createElement('div');
+  d.className = 'chat-msg' + (isUser ? ' user' : '');
+
+  if (!isUser) {
+    // STEPバッジを抽出して表示
+    var badgeMatch = text.match(/(STEP \d[^—\n]*—[^\n]*|RECOMMENDATION[^\n]*|WARNING[^\n]*|⚠[^\n]*)/);
+    var badgeHtml = '';
+    if (badgeMatch) {
+      var cls = getBadgeClass(text);
+      badgeHtml = '<span class="step-badge ' + cls + '">' + badgeMatch[0] + '</span><br>';
+      detectStep(text);
+    }
+    d.innerHTML = '<div class="chat-av-sm bot">🚫</div><div class="chat-bubble">' + badgeHtml + text.replace(/\n/g,'<br>') + '</div>';
+  } else {
+    d.innerHTML = '<div class="chat-av-sm usr">YOU</div><div class="chat-bubble">' + text + '</div>';
+  }
+
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showTyping() {
+  var box = document.getElementById('chatMessages');
+  var d = document.createElement('div');
+  d.id = 'typ';
+  d.className = 'chat-msg bot';
+  d.innerHTML = '<div class="chat-av-sm bot">🚫</div><div class="chat-bubble"><div class="typing-wrap"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>';
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function hideTyping() {
+  var t = document.getElementById('typ');
+  if (t) t.remove();
+}
+
+// ── チャット送信 ──
+var history = [];
+var msgCnt = 0;
+
+async function sendMsg() {
+  var inp = document.getElementById('chatInput');
+  var btn = document.getElementById('chatSend');
+  var txt = inp.value.trim();
+  if (!txt || btn.disabled) return;
+
+  addBubble(txt, true);
+  history.push({ role: 'user', content: txt });
+  inp.value = '';
+  inp.style.height = 'auto';
+  btn.disabled = true;
+  btn.textContent = '...';
+  msgCnt++;
+
+  // カウント+1（サーバー経由）
+  showTyping();
+
+  try {
+    // ── Vercel関数経由でClaude呼び出し ──
+    var res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: txt })
+    });
+    var data = await res.json();
+    var reply = data.reply || 'エラーが発生しました。';
+
+    hideTyping();
+    addBubble(reply, false);
+    history.push({ role: 'assistant', content: reply });
+
+    if (msgCnt >= 3) {
+      updateStepUI(3);
+      setTimeout(function() {
+        addBubble('RECOMMENDATION — 診断完了\n\n3ステップの診断から複数のリスクポイントが特定されました。\n\n詳細な診断レポート（¥49,800 / 近日販売開始）では、失敗DBとの詳細照合・優先修正3点をPDFで提供します。\n\nフォローして販売開始の通知を受け取る → @pandorapanchan1', false);
+      }, 1200);
+    }
+
+  } catch(e) {
+    hideTyping();
+    addBubble('接続エラーが発生しました。もう一度お試しください。', false);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'SEND →';
+}
+
+document.getElementById('chatInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+});
+document.getElementById('chatInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 90) + 'px';
+});
+</script>
+</body>
+</html>
