@@ -65,6 +65,52 @@ nav{background:#090909;border-bottom:1px solid #222;padding:0 20px;height:52px;d
 .x-btn{display:inline-flex;align-items:center;gap:8px;background:#d4870a;color:#090909;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:14px 24px;text-decoration:none;}
 .x-btn:hover{opacity:0.85;}
 
+/* COUNTER */
+.counter{background:#111;border-bottom:1px solid #222;padding:32px 20px;text-align:center;}
+.counter-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;letter-spacing:3px;margin-bottom:8px;}
+.counter-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,10vw,80px);font-weight:900;color:#d4870a;line-height:1;}
+.counter-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;margin-top:4px;}
+.counter-bar-wrap{max-width:400px;margin:16px auto 0;}
+.counter-bar{height:4px;background:#222;border-radius:2px;}
+.counter-bar-fill{height:100%;background:#d4870a;border-radius:2px;transition:width 1.5s ease;}
+.counter-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;margin-top:6px;}
+
+/* PATTERNS */
+.patterns{padding:48px 20px;border-bottom:1px solid #222;max-width:800px;margin:0 auto;}
+.sec-head{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;letter-spacing:3px;margin-bottom:8px;}
+.sec-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:700;text-transform:uppercase;margin-bottom:24px;}
+.pattern-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;background:#222;}
+.pattern-card{background:#111;padding:18px 16px;}
+.pattern-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.pattern-name{font-size:12px;font-weight:700;line-height:1.5;flex:1;}
+.pattern-pct{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:900;color:#c0281c;white-space:nowrap;}
+.pattern-bar{height:2px;background:#222;margin-bottom:8px;}
+.pattern-bar-fill{height:100%;background:#c0281c;}
+.pattern-desc{font-size:11px;color:#555;line-height:1.7;}
+
+/* GUARANTEE */
+.guarantee{padding:48px 20px;border-bottom:1px solid #333;background:#0d0000;max-width:800px;margin:0 auto;}
+.guarantee-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#333;margin-top:24px;}
+.g-card{background:#110000;padding:20px;}
+.g-card.full{grid-column:1/-1;}
+.g-num{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;color:#c0281c;line-height:1;margin-bottom:4px;}
+.g-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;letter-spacing:2px;margin-bottom:8px;}
+.g-desc{font-size:12px;color:#666;line-height:1.8;}
+.g-desc strong{color:#ede8dc;}
+.g-note{margin-top:16px;padding:12px 16px;background:#0a0000;border-left:3px solid #c0281c;font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;line-height:1.8;}
+
+/* SERVICES */
+.services{padding:48px 20px;border-bottom:1px solid #222;max-width:800px;margin:0 auto;}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:2px;background:#222;margin-top:24px;}
+.service-card{background:#111;padding:22px 18px;}
+.service-card.live{background:#120a00;border-top:3px solid #d4870a;}
+.s-status{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;margin-bottom:10px;}
+.s-live{color:#d4870a;}.s-locked{color:#444;}
+.s-price{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;line-height:1;margin-bottom:4px;}
+.s-psub{font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;margin-bottom:10px;}
+.s-title{font-size:13px;font-weight:700;margin-bottom:6px;}
+.s-desc{font-size:11px;color:#555;line-height:1.8;}
+
 footer{text-align:center;padding:24px;border-top:1px solid #222;font-family:'JetBrains Mono',monospace;font-size:10px;color:#333;}
 </style>
 </head>
@@ -88,6 +134,70 @@ footer{text-align:center;padding:24px;border-top:1px solid #222;font-family:'Jet
   <div class="stat"><div class="stat-num">70%</div><div class="stat-lbl">失敗原因が<br>技術ではなく組織</div></div>
 </div>
 
+<!-- COUNTER -->
+<div class="counter">
+  <div class="counter-label">COLLECTED CONSULTATIONS</div>
+  <div class="counter-num"><span id="cntDisp">042</span><span style="font-size:0.4em;color:#555;">/500</span></div>
+  <div class="counter-sub">LAUNCH GATE: 500件達成で有料サービス開始</div>
+  <div class="counter-bar-wrap">
+    <div class="counter-bar"><div class="counter-bar-fill" id="cntBar" style="width:8.4%;"></div></div>
+    <div class="counter-pct" id="cntPct">8.4% COMPLETE</div>
+  </div>
+</div>
+
+<!-- FAILURE PATTERNS -->
+<div class="patterns">
+  <div class="sec-head">01 —</div>
+  <div class="sec-title">FAILURE PATTERNS</div>
+  <div class="pattern-grid">
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">リテラシー・スキル不足型</div><div class="pattern-pct">70%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:70%;"></div></div>
+      <div class="pattern-desc">「とりあえず入れた」後、誰も使いこなせない。研修なし・ガイドなし。最頻出。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">目的・KPI不在型</div><div class="pattern-pct">54%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:54%;"></div></div>
+      <div class="pattern-desc">何のために入れるかが曖昧なまま導入。失敗しているかすら判定できない状態に。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">現場拒絶サイレント型</div><div class="pattern-pct">51%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:51%;"></div></div>
+      <div class="pattern-desc">経営が「全員賛成」と思っているが現場は黙って従来通り。AIは起動中、誰も使わず。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">AI信頼性欠如型</div><div class="pattern-pct">54%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:54%;"></div></div>
+      <div class="pattern-desc">誰もAIの出力を信頼せず、人間が全件確認。二重作業で工数が逆に増加する。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">シャドーAI蔓延型</div><div class="pattern-pct">90%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:90%;"></div></div>
+      <div class="pattern-desc">公式AIが機能せず、従業員の9割が個人で無断利用。情報漏洩リスク制御不能。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">短期成果強制型</div><div class="pattern-pct">40%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:40%;"></div></div>
+      <div class="pattern-desc">「3ヶ月で成果を出せ」。AIの定着には時間がかかり、効果が出る前に撤退。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">AI幻覚実害型</div><div class="pattern-pct">30%↑</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:30%;"></div></div>
+      <div class="pattern-desc">存在しない法令・数値を生成。法務・財務に誤用され訴訟・罰金へ。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">ベンダーロック崩壊型</div><div class="pattern-pct">25%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:25%;"></div></div>
+      <div class="pattern-desc">依存後にAPI廃止・価格改定・サービス終了で詰む。撤退コストが膨張する。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-top"><div class="pattern-name">スコープ爆発型</div><div class="pattern-pct">35%</div></div>
+      <div class="pattern-bar"><div class="pattern-bar-fill" style="width:35%;"></div></div>
+      <div class="pattern-desc">要件が無制限に膨らんで何もできない中途半端なシステムになる。</div>
+    </div>
+  </div>
+</div>
+
 <div class="chat-section">
   <div class="chat-title">02 — FREE AI CONSULTATION</div>
   <div class="chat-box">
@@ -109,6 +219,59 @@ footer{text-align:center;padding:24px;border-top:1px solid #222;font-family:'Jet
       <button id="sendBtn" onclick="sendMessage()">SEND →</button>
     </div>
     <div class="chat-note">🔒 ANONYMOUS — Gemini AI搭載 — 無料・匿名OK</div>
+  </div>
+</div>
+
+<!-- GUARANTEE -->
+<div class="guarantee">
+  <div class="sec-head">03 —</div>
+  <div class="sec-title">2-YEAR FULL REFUND GUARANTEE</div>
+  <p style="font-size:13px;color:#666;line-height:1.9;max-width:560px;">提言通りに実行して失敗したら、<strong style="color:#ede8dc;">全額返金します。</strong>これは顧客を選別するフィルターとして機能する。</p>
+  <div class="guarantee-grid">
+    <div class="g-card">
+      <div class="g-num">100%</div>
+      <div class="g-lbl">REFUND — 返金上限</div>
+      <div class="g-desc"><strong>受領済み報酬の全額を返金。</strong>提言を実行したにもかかわらず失敗した場合のみ、VETOの診断ミスとして全額返金する。</div>
+    </div>
+    <div class="g-card">
+      <div class="g-num">3+1</div>
+      <div class="g-lbl">CONDITIONS — 保証発動条件</div>
+      <div class="g-desc"><strong>入口3条件：</strong>①聞き入れスコア21点以上 ②C-suite署名の誓約書 ③失敗定義合意書への事前合意<br><br><strong>継続：</strong>提言実行率80%以上を2年間維持。</div>
+    </div>
+    <div class="g-card full">
+      <div class="g-lbl">免責事由（抜粋）</div>
+      <div class="g-desc">提言実行率80%未満 / S優先度提言の未実行 / 警告アラートの無視 / 外部市場崩壊・天災 / 情報虚偽 / 契約外スコープ</div>
+    </div>
+  </div>
+  <div class="g-note">⚠ 実際の契約書は弁護士レビュー済みのものを使用します。現在DB収集フェーズのため、有料サービスは500件達成後に開始します。</div>
+</div>
+
+<!-- SERVICES -->
+<div class="services">
+  <div class="sec-head">04 —</div>
+  <div class="sec-title">SERVICES — LOCKED UNTIL DB READY</div>
+  <div class="service-grid">
+    <div class="service-card live">
+      <div class="s-status s-live">● NOW ACTIVE</div>
+      <div class="s-price">FREE</div>
+      <div class="s-psub">無料 / 匿名OK / Gemini AI搭載</div>
+      <div class="s-title">AI失敗 無料相談チャット</div>
+      <div class="s-desc">3ステップ診断。失敗パターン9種との照合。相談1件でDBカウント+1。</div>
+    </div>
+    <div class="service-card" style="opacity:0.6;">
+      <div class="s-status s-locked">○ LOCKED — DB 500件で解放</div>
+      <div class="s-price">¥49,800</div>
+      <div class="s-psub">/ 診断レポート1回</div>
+      <div class="s-title">セルフ診断 リスクスコアレポート</div>
+      <div class="s-desc">30問の問診票 → 失敗DB照合 → リスクスコアと優先修正3点をPDFで納品。</div>
+    </div>
+    <div class="service-card" style="opacity:0.4;">
+      <div class="s-status s-locked">○ LOCKED — DB 1,000件 + 2年返金保証</div>
+      <div class="s-price">¥500K〜</div>
+      <div class="s-psub">/ 件 + 2年全額返金保証</div>
+      <div class="s-title">プレ・モーテム 専門家診断</div>
+      <div class="s-desc">導入計画書を提出 → 専門家が類似失敗事例と照合 → 「失敗シナリオレポート」を2週間で納品。</div>
+    </div>
   </div>
 </div>
 
