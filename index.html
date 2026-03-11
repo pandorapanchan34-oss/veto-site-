@@ -348,6 +348,21 @@ async function sendMessage() {
 document.getElementById("userInput").addEventListener("keydown", function(e) {
   if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
 });
+ function updateCounter(count) {
+  var pct = Math.min(100, count / 500 * 100).toFixed(1);
+  var p3 = String(count).padStart(3, '0');
+  document.getElementById('cntDisp').textContent = p3;
+  document.getElementById('cntBar').style.width = pct + '%';
+  document.getElementById('cntPct').textContent = pct + '% COMPLETE';
+}
+
+// ページ読み込み時にカウント取得
+window.addEventListener('load', function() {
+  fetch('/api/count')
+    .then(r => r.json())
+    .then(d => { if (d.count) updateCounter(d.count); })
+    .catch(() => {});
+}); 
 </script>
 
 </body>
