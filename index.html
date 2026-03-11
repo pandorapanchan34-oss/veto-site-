@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+y<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -328,6 +328,15 @@ async function sendMessage() {
     });
     const data = await res.json();
     addMessage(data.reply || "AI応答を取得できませんでした", false);
+
+    // チャット成功後にカウント+1（失敗しても無視）
+    fetch("/api/count", { method: "POST" })
+      .then(r => r.json())
+      .then(d => {
+        if (d.count) updateCounter(d.count);
+      })
+      .catch(() => {});
+
   } catch(e) {
     addMessage("接続エラーが発生しました。もう一度お試しください。", false);
   }
