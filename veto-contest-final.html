@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VETO AI失敗アートアワード ～それ、やめときましょう～</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&family=Noto+Sans+JP:wght@300;400;700;900&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0d0d0d;
+    --paper: #f0ebe0;
+    --red: #d93025;
+    --orange: #e8722a;
+    --yellow: #f0c230;
+    --dim: #1a1a1a;
+    --line: #2a2a2a;
+    --muted: rgba(240,235,224,0.45);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--paper);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* GLITCH HEADER */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2.5rem 1.8rem 3rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -55deg,
+      transparent 0px,
+      transparent 28px,
+      rgba(217,48,37,0.06) 28px,
+      rgba(217,48,37,0.06) 30px
+    );
+    pointer-events: none;
+  }
+
+  .glitch-lines {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 55%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .glitch-lines span {
+    display: block;
+    height: 1px;
+    background: var(--red);
+    opacity: 0;
+    animation: scanline 3s infinite;
+  }
+
+  .glitch-lines span:nth-child(1) { margin-top: 20%; animation-delay: 0s; width: 60%; }
+  .glitch-lines span:nth-child(2) { margin-top: 8%; animation-delay: 0.7s; width: 30%; margin-left: 40%; }
+  .glitch-lines span:nth-child(3) { margin-top: 5%; animation-delay: 1.4s; width: 80%; }
+  .glitch-lines span:nth-child(4) { margin-top: 3%; animation-delay: 2.1s; width: 45%; margin-left: 20%; }
+
+  @keyframes scanline {
+    0%, 90%, 100% { opacity: 0; transform: scaleX(1); }
+    92% { opacity: 0.9; transform: scaleX(1.05); }
+    95% { opacity: 0.3; transform: scaleX(0.95); }
+    97% { opacity: 0.8; }
+  }
+
+  .error-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+    animation: blink 2s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .hero-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .hero h1 {
+    font-family: 'Zen Antique Soft', serif;
+    font-size: clamp(2.6rem, 12vw, 6.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.4rem;
+    animation: heroIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .hero h1 .accent {
+    color: var(--red);
+    display: block;
+    font-size: 0.6em;
+  }
+
+  .hero-catch {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.75rem, 3.5vw, 1rem);
+    color: var(--yellow);
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+    animation: heroIn 0.8s 0.15s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .hero-date {
+    margin-top: 1.8rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    animation: heroIn 0.8s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .date-block {
+    background: var(--red);
+    padding: 0.5rem 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+  }
+
+  .date-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  section {
+    padding: 2.8rem 1.8rem;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+
+  .sec-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    color: var(--orange);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-family: 'Zen Antique Soft', serif;
+    font-size: clamp(1.6rem, 7vw, 2.8rem);
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+  }
+
+  p {
+    font-size: 0.88rem;
+    line-height: 1.95;
+    color: rgba(240,235,224,0.78);
+  }
+
+  .theme-box {
+    background: var(--dim);
+    border-left: 4px solid var(--red);
+    padding: 1.6rem;
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-box::after {
+    content: 'FAIL';
+    position: absolute;
+    right: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(90deg);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 4rem;
+    color: rgba(217,48,37,0.07);
+    letter-spacing: 0.1em;
+    pointer-events: none;
+  }
+
+  .rule-list {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+  }
+
+  .rule-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+  }
+
+  .rule-item:last-child { border-bottom: none; }
+
+  .rule-k {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--yellow);
+    letter-spacing: 0.15em;
+    padding-top: 0.1rem;
+  }
+
+  .rule-v {
+    font-size: 0.87rem;
+    color: rgba(240,235,224,0.85);
+    line-height: 1.75;
+  }
+
+  .rule-v strong { color: var(--paper); font-weight: 700; }
+
+  .hint-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+  }
+
+  .chip {
+    background: var(--dim);
+    border: 1px solid var(--line);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.35rem 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .judge-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    align-items: flex-start;
+  }
+
+  .judge-item:last-child { border-bottom: none; }
+
+  .judge-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: center;
+    margin-top: 0.1rem;
+  }
+
+  .judge-text {
+    font-size: 0.86rem;
+    color: rgba(240,235,224,0.8);
+    line-height: 1.75;
+  }
+
+  .judge-text strong { color: var(--paper); }
+
+  .prize-card {
+    background: linear-gradient(135deg, #1a0a0a 0%, #2a0e0e 100%);
+    border: 1px solid var(--red);
+    padding: 1.8rem 1.5rem;
+    margin-top: 1.2rem;
+    position: relative;
+  }
+
+  .prize-card h3 {
+    font-family: 'Zen Antique Soft', serif;
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--yellow);
+  }
+
+  .prize-card ul {
+    list-style: none;
+    font-size: 0.85rem;
+    line-height: 2.1;
+    color: rgba(240,235,224,0.8);
+  }
+
+  .prize-card ul li::before {
+    content: '▶ ';
+    color: var(--red);
+  }
+
+  .cta {
+    background: var(--red);
+    padding: 2.5rem 1.8rem;
+    text-align: center;
+  }
+
+  .cta h2 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(1rem, 5vw, 1.5rem);
+    letter-spacing: 0.08em;
+    margin-bottom: 0.8rem;
+    color: var(--paper);
+  }
+
+  .hashtag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    color: var(--yellow);
+    display: block;
+    margin: 0.3rem 0;
+    letter-spacing: 0.05em;
+  }
+
+  footer {
+    padding: 1.5rem 1.8rem;
+    border-top: 1px solid var(--line);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(240,235,224,0.2);
+    letter-spacing: 0.15em;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="glitch-lines">
+    <span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="error-badge">⚠ ERROR_DETECTED — SUBMISSION OPEN</div>
+  <div class="hero-eyebrow">VETO × AI ART AWARD 2026</div>
+  <h1>
+    AI失敗<br>アートアワード
+    <span class="accent">〜それ、やめときましょう〜</span>
+  </h1>
+  <div class="hero-catch">あなたのAI失敗作、作品にして応募してください。</div>
+  <div class="hero-date">
+    <div class="date-block">3.29 — 4.18</div>
+    <div class="date-sub">3週間 / X投稿で応募<br>1人2点まで</div>
+  </div>
+</div>
+
+<!-- テーマ -->
+<section>
+  <div class="sec-label">01 — Theme</div>
+  <h2>お題</h2>
+  <div class="theme-box">
+    <p>
+      <strong style="color:var(--paper)">「AIで生成して失敗した作品、またはわざと失敗させた作品を1点出せ！」</strong><br><br>
+      幻覚・崩れ・変な手・グロいミス・不自然な解釈・意味不明な出力…なんでも大歓迎。<br>
+      自分のリアルな失敗体験を基にしても、完全にネタで遊んでもOK。<br>
+      VETOの失敗パターンを意識しなくても<strong style="color:var(--yellow)">全く問題なし</strong>。<br><br>
+      <strong style="color:var(--yellow)">とにかく面白く、衝撃的、笑える、ゾッとする作品を待ってる！</strong><br>
+      気軽にポンっと投稿してね。
+    </p>
+  </div>
+</section>
+
+<!-- 応募ルール -->
+<section>
+  <div class="sec-label">02 — Rules</div>
+  <h2>応募ルール</h2>
+  <div class="rule-list">
+    <div class="rule-item">
+      <div class="rule-k">TOOL</div>
+      <div class="rule-v">AIツール不問（Midjourney / DALL-E / Stable Diffusion / ChatGPT など何でもOK）</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-k">FORMAT</div>
+      <div class="rule-v">静止画 <strong>1点</strong>。画像＋ハッシュタグをXに投稿 → 自動応募</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-k">PROMPT</div>
+      <div class="rule-v">使用したプロンプトを一緒に投稿してくれると嬉しい（<strong>任意</strong>）。「どうやって失敗を誘発したか」がわかると審査でボーナスになる場合あり</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-k">LIMIT</div>
+      <div class="rule-v">1人 <strong>2点まで</strong>。期間中は削除しないこと</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-k">LICENSE</div>
+      <div class="rule-v">応募＝著作権フリー（CC0相当）に同意とみなす。受賞作はVETOサイト・SNSで使用予定。作者名はスペシャルサンクスとして掲載</div>
+    </div>
+    <div class="rule-item">
+      <div class="rule-k">PERIOD</div>
+      <div class="rule-v"><strong>2026年3月29日（日）〜 4月18日（金）</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- ハッシュタグ -->
+<section>
+  <div class="sec-label">03 — Hashtag</div>
+  <h2>ハッシュタグ</h2>
+  <p>以下2つを<strong style="color:var(--paper)">両方</strong>付けて投稿してください。</p>
+  <div style="margin-top:1.2rem; padding: 1.2rem; background: var(--dim); border: 1px solid var(--line);">
+    <span class="hashtag">#VETO失敗アート</span>
+    <span class="hashtag">#それやめときましょうアート</span>
+  </div>
+</section>
+
+<!-- 審査ポイント -->
+<section>
+  <div class="sec-label">04 — Judging</div>
+  <h2>審査ポイント</h2>
+  <div class="judge-item">
+    <div class="judge-icon">😂</div>
+    <div class="judge-text"><strong>面白さ・インパクト</strong><br>笑える、シェアしたくなる、衝撃的な失敗ネタ感</div>
+  </div>
+  <div class="judge-item">
+    <div class="judge-icon">🤖</div>
+    <div class="judge-text"><strong>失敗の見せ方</strong><br>AIのコケっぷりがどう表現されてるか、創造性</div>
+  </div>
+  <div class="judge-item">
+    <div class="judge-icon">📝</div>
+    <div class="judge-text"><strong>プロンプトの工夫</strong>（任意ボーナス）<br>どうやって失敗を誘発したかが面白いと加点</div>
+  </div>
+  <div class="judge-item">
+    <div class="judge-icon">⚠️</div>
+    <div class="judge-text"><strong>VETOらしさ</strong>（自然に加点）<br>自然と失敗パターンに触れてたらボーナス（意識しなくてもOK）</div>
+  </div>
+  <p style="margin-top:1.5rem; font-size:0.82rem; color:var(--muted);">応募作品はGrokによりハッシュタグから全件収集。審査・最終順位の決定はVETO主催（@pandorapanchan1）が行い、VETO視点のコメント付きで発表します。いいね数は参考程度。</p>
+</section>
+
+<!-- 賞 -->
+<section>
+  <div class="sec-label">05 — Prize</div>
+  <h2>賞品</h2>
+  <div class="prize-card">
+    <h3>🥇 グランプリ</h3>
+    <ul>
+      <li>VETOサイト「失敗ギャラリー」トップに3ヶ月掲載</li>
+      <li>@pandorapanchan1 で作品＋作者紹介（失敗談も任意でOK）</li>
+      <li>VETO有料診断レポート（将来リリース時）の無償提供</li>
+    </ul>
+  </div>
+  <div class="prize-card" style="margin-top:1rem; border-color:#e8722a;">
+    <h3>🥈 優秀賞 × 数名</h3>
+    <ul>
+      <li>VETOサイト・SNSで作品紹介</li>
+      <li>「VETO公認 失敗アーティスト」デジタルバッジ</li>
+    </ul>
+  </div>
+  <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--muted);">※賞金はなし。作品がVETOの「失敗から学ぶ」コンテンツになる体験価値がメインです。</p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>今すぐXで投稿しよう！</h2>
+  <span class="hashtag">#VETO失敗アート</span>
+  <span class="hashtag">#それやめときましょうアート</span>
+  <p>あなたのAI失敗ネタ、待ってます。<br>気軽に参加して、一緒に「それ、やめときましょう」を笑い飛ばそう。</p>
+</section>
+
+<footer>
+  VETO AI失敗アートアワード 2026 — © pandorapanchan — 失敗は学びの第一歩
+</footer>
+
+</body>
+</html>
